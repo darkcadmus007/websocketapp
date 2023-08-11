@@ -54,10 +54,10 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();    
     _socket = IO.io(
-      //For Web
-      "http://localhost:3000",
+      //For Browser
+      // "http://localhost:3000",
       //For Mobile Device
-      // 'http://10.0.2.2:3000',
+      'http://10.0.2.2:3000',
       //Test Socket
       // 'https://dev-socket.vmatch.live',
       IO.OptionBuilder().setTransports(['websocket']).build(),

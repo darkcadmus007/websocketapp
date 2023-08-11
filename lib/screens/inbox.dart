@@ -1,11 +1,13 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocketapp/api/api_repository.dart';
 import 'package:websocketapp/model/user.dart';
 import 'package:websocketapp/providers/chat.dart';
+import 'package:websocketapp/providers/login.dart';
 import 'package:websocketapp/screens/chat.dart';
+import 'package:websocketapp/screens/login.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({
@@ -50,6 +52,20 @@ ListView _userListView(data) {
         });
   }
 
+  _logout() async {
+     SharedPreferences pref = await SharedPreferences.getInstance(); 
+     pref.clear();
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+          builder: (_) => ChangeNotifierProvider(
+            create: (context) => LoginProvider(),
+            child: LoginScreen()                
+          ),
+        ),);
+    
+  }
+
   ListTile _tile(int id, String username, String name) =>
       ListTile(
         onTap: (){  Navigator.push(
@@ -87,8 +103,7 @@ ListView _userListView(data) {
             icon: const Icon(Icons.logout),
             tooltip: 'Show Snackbar',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
+                  _logout();
             },
           ),
          
