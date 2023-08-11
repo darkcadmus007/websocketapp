@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocketapp/model/message.dart';
 import 'package:websocketapp/providers/chat.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {  
   final int receiverId;
@@ -23,18 +23,20 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _sendMessage() async {
      SharedPreferences pref = await SharedPreferences.getInstance();   
-     final myId = pref.getInt('id');   
+     final myId = pref.getInt('id');        
     _socket.emit('message', {
       'message': _messageInputController.text.trim(),    
       'senderId':myId,
-      'receiverId':widget.receiverId
+      'receiverId':widget.receiverId,
+      'sentAt':DateTime.now().millisecond
     });
     _messageInputController.clear();
   }
 
-  _connectSocket() async {
+  _connectSocket() async {   
      SharedPreferences pref = await SharedPreferences.getInstance();   
-     yourId = pref.getInt('id')!.toInt();   
+     yourId = pref.getInt('id')!.toInt();  
+    _socket.connect(); 
     _socket.onConnect((data) => print('Connection established'));
     _socket.onConnectError((data) => print('Connect Error: $data'));
     _socket.onDisconnect((data) => print('Socket.IO server disconnected'));
@@ -44,16 +46,17 @@ class _ChatScreenState extends State<ChatScreen> {
         Message.fromJson(data),
       ),
     );
+    
    
   }
 
   @override
   void initState() {
-    super.initState();
-   
+    super.initState();    
     _socket = IO.io(
-      // 'http://10.0.2.2:3000',
-      'http://localhost:3000',
+      // "http://localhost:3000",
+      'http://10.0.2.2:3000',
+      // 'https://dev-socket.vmatch.live',
       IO.OptionBuilder().setTransports(['websocket']).build(),
     );
     _connectSocket();
@@ -62,6 +65,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _messageInputController.dispose();   
+    _socket.dispose();
+    ChatProvider().dispose();
     super.dispose();
   }
 

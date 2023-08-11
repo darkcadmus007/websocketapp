@@ -16,6 +16,9 @@ class ChatProvider extends ChangeNotifier {
     _messages.add(message);
     notifyListeners();
   }
-
+  clearAllMessage(){
+    _messages.clear();
+    notifyListeners();
+  }
   
 }
