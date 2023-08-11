@@ -3,10 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:websocketapp/api/api_repository.dart';
-import 'package:websocketapp/providers/chat.dart';
 import 'package:websocketapp/providers/inbox.dart';
 import 'package:websocketapp/providers/login.dart';
-import 'package:websocketapp/screens/chat.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocketapp/screens/inbox.dart';
